@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     links.forEach(link => {
         link.addEventListener("click", (event) => {
-            event.preventDefault();
+            // event.preventDefault();
             const sectionId = link.getAttribute("href").substring(1);
             const section = document.getElementById(sectionId);
 
