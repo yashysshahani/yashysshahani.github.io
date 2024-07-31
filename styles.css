@@ -1,40 +1,122 @@
+/* Base font styling */
 .source-sans-3-body {
     font-family: "Source Sans 3", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
-  }
+}
 
+/* Body styling */
 body {
     font-family: "Source Sans 3", sans-serif;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     box-sizing: border-box;
 }
 
-header, nav, main, footer {
+.container {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    height: calc(100vh - 40px); /* Adjust height to account for footer */
+}
+
+.navbar {
+    background-color: #cc2828;
+    color: white;
     padding: 20px;
-    text-align: center;
+    box-sizing: border-box;
+    width: 25%; /* Sidebar takes 1/3 of the width by default */
+    height: 100%;
+    overflow-y: auto; /* Ensure sidebar content is scrollable if needed */
+    display: flex;
+    flex-direction: column;
 }
 
 nav ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
+    margin-left: 10px;
 }
 
 nav ul li {
-    display: inline;
-    margin: 0 10px;
+    margin: 10px 0;
+    font-size: 20px;
 }
 
 nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
 }
 
-main {
+/* Main content styling */
+.main {
+    background-color: #ffffff;
     padding: 20px;
+    flex: 1;
+    display: block;
+    justify-content: left; /* Center the content horizontally */
+    align-items: left; /* Center the content vertically */
+    overflow-y: auto; /* Ensure main content is scrollable if needed */
 }
 
+/* Centered text block */
+.centered-text {
+    width: 80%; /* Adjust this value as needed */
+    text-align: left;
+    padding: 20px;
+    background-color: #f9f9f9; /* Optional: background color */
+    border: 1px solid #ccc; /* Optional: border */
+    border-radius: 10px; /* Optional: rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: box shadow */
+}
+
+/* Footer styling */
 footer {
     background-color: #333;
-    color: #fff
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    height: 40px; /* Footer height */
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: calc(100vh - 40px); /* Adjust height to account for footer */
+    }
+    .navbar {
+        width: 100%; /* Sidebar takes full width on smaller screens */
+        height: auto;
+        text-align: center;
+        align-items: center;
+    }
+    .main {
+        width: 100%; /* Main content takes the full width */
+        height: auto;
+    }
+    .author-pic {
+        display: block;
+        justify-content: center;
+        display: flex;
+    }
+    nav ul {
+        margin-left: 0;
+    }
+}
+
+.author-pic {
+    border-radius: 30px;
+    height: 300;
+    width: 300px;
+    margin-right: 20px;
+    border: 5px solid #ffffff;
 }
