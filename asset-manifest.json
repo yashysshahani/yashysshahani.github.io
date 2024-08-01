@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/yashysshahani.github.io/static/css/main.9708346d.css",
+    "main.js": "/yashysshahani.github.io/static/js/main.d4df7e7c.js",
+    "static/media/author-pic-2.jpg": "/yashysshahani.github.io/static/media/author-pic-2.357da1c86e9be2ebe50d.jpg",
+    "index.html": "/yashysshahani.github.io/index.html",
+    "main.9708346d.css.map": "/yashysshahani.github.io/static/css/main.9708346d.css.map",
+    "main.d4df7e7c.js.map": "/yashysshahani.github.io/static/js/main.d4df7e7c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9708346d.css",
+    "static/js/main.d4df7e7c.js"
+  ]
+}
