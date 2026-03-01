@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yash Shahani — Data Scientist | Legend</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:        #0a0f1e;
+      --navy-mid:    #0d1730;
+      --navy-light:  #132040;
+      --accent:      #4f8ef7;
+      --accent-bright: #7ab3ff;
+      --white:       #f0f4ff;
+      --muted:       #8899cc;
+      --border:      rgba(79, 142, 247, 0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    #starfield {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(10,15,30,0.95) 0%, transparent 100%);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8vw 7rem;
+      padding-top: 6rem;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      line-height: 0.95;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent-bright); }
+    .hero-sub {
+      margin-top: 2rem;
+      max-width: 600px;
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.8rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .btn-primary { background: var(--accent); color: #fff; border: none; }
+    .btn-primary:hover { background: var(--accent-bright); transform: translateY(-2px); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--white); border-color: var(--accent); }
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem; left: 8vw;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s 1.2s forwards;
+    }
+    .scroll-hint::before {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--muted);
+    }
+
+
+    .metric-item {
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-item:last-child { border-right: none; }
+    .metric-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .metric-item:hover::before { opacity: 1; }
+    .metric-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      color: var(--accent-bright);
+      line-height: 1;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 8vw; }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+
+    /* TIMELINE */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+    .timeline-item {
+      padding: 2.5rem 0 2.5rem 3rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      transition: background 0.2s;
+    }
+    .timeline-item:hover { background: rgba(79, 142, 247, 0.04); }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -5px; top: 2.7rem;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--navy);
+      border: 2px solid var(--accent);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .timeline-role { font-size: 1.15rem; font-weight: 600; }
+    .timeline-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .timeline-company {
+      color: var(--accent);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .timeline-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .timeline-bullets li {
+      font-size: 0.95rem;
+      color: var(--muted);
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .timeline-bullets li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79, 142, 247, 0.4);
+      box-shadow: 0 20px 40px rgba(79, 142, 247, 0.12);
+    }
+    .project-card:hover::after { transform: scaleX(1); }
+    .project-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      background: rgba(79, 142, 247, 0.12);
+      color: var(--accent);
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.75rem;
+    }
+    .project-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; line-height: 1.3; }
+    .project-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      font-weight: 500;
+      transition: gap 0.2s;
+    }
+    .project-link:hover { gap: 0.6rem; }
+
+    /* SKILLS */
+    .skills-section {
+      background: var(--navy-mid);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .skill-group h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .skill-tag {
+      font-size: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+    .skill-tag:hover {
+      background: rgba(79, 142, 247, 0.1);
+      border-color: var(--accent);
+      color: var(--white);
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .about-text p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+    .about-facts { display: flex; flex-direction: column; gap: 1.5rem; }
+    .fact {
+      padding: 1.5rem;
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .fact-icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
+    .fact h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .fact p { font-size: 0.85rem; color: var(--muted); }
+
+    /* CONTACT */
+    .contact-section {
+      text-align: center;
+      background: var(--navy-mid);
+      border-top: 1px solid var(--border);
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    /* CYCLING */
+    .cycling-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .cycling-bio p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .strava-embed { margin-top: 1.5rem; opacity: 0.9; }
+    .recent-rides { margin-top: 1.5rem; }
+    .rides-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.75rem;
+    }
+    .ride-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 0 1rem;
+    }
+    .ride-item:last-child { border-bottom: none; }
+    .ride-name { font-size: 0.95rem; font-weight: 500; color: var(--white); }
+    .ride-dist { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--accent-bright); grid-row: 1; }
+    .ride-meta { font-size: 0.75rem; color: var(--muted); grid-column: 1 / -1; margin-top: 0.15rem; }
+    .cycling-stats { display: flex; flex-direction: column; gap: 1rem; }
+    .cycling-stat {
+      padding: 1.5rem 2rem;
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cycling-stat:hover {
+      transform: translateX(4px);
+      box-shadow: 0 8px 24px rgba(79,142,247,0.1);
+    }
+    .cycling-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: var(--accent-bright);
+      line-height: 1;
+    }
+    .cycling-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-top: 0.3rem;
+    }
+    .cycling-context {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      letter-spacing: 0.05em;
+    }
+    @media (max-width: 768px) {
+      .cycling-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 8vw;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 1rem 5vw; }
+      .nav-links { display: none; }
+      section { padding: 4rem 5vw; }
+      .metrics { padding: 3rem 5vw; }
+      .metric-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero { padding: 0 5vw; padding-top: 5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">YS</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Data Scientist | Legend</div>
+    <h1>Yash<br><em>Shahani</em></h1>
+    <p class="hero-sub">
+      UCLA grad telling stories through data.
+    </p>
+    <div class="hero-cta">
+      <a href="mailto:yashysshahani@ucla.edu" class="btn btn-primary">Get in touch ↗</a>
+      <a href="https://github.com/yashysshahani" target="_blank" class="btn btn-ghost">GitHub</a>
+      <a href="https://linkedin.com/in/yashysshahani" target="_blank" class="btn btn-ghost">LinkedIn</a>
+    </div>
+    <div class="scroll-hint">Scroll to explore</div>
+  </section>
+
+
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <div class="section-label">// yash</div>
+        <h2 class="section-title">Making data<br>make sense.</h2>
+        <p>I'm a recent <strong>UCLA Statistics & Data Science</strong> grad who loves telling stories through data. I love working with text data, and I've had great opportunities to do so in internships, projects, and school.</p>
+        <p>I've done research at <strong>Stanford</strong>, built BI tools at <strong>Humanify</strong>, and turned shower thoughts into entire end-to-end projects (like predicting my own movie ratings). My passion is not only for data but being able to present it in a way where everyone can understand.</p>
+        <p>For fun: cycling, the great outdoors, and a deep love for experiencing stories in any form.</p>
+      </div>
+      <div class="about-facts reveal">
+        
+        <div class="fact">
+          <div class="fact-icon">🎓</div>
+          <div>
+            <h4>UCLA, 2025</h4>
+            <p>B.S. Statistics & Data Science — Databases, Text Mining, Monte Carlo Methods, Computational Stats in R, and more</p>
+          </div>
+        </div>
+
+        <div class="fact">
+          <div class="fact-icon">📍</div>
+          <div>
+            <h4>San Jose, CA</h4>
+            <p>But open to wherever the wind takes me</p>
+          </div>
+        </div>
+
+        <div class="fact">
+          <div class="fact-icon">🌐</div>
+          <div>
+            <h4>Languages</h4>
+            <p>English, Mandarin Chinese</p>
+          </div>
+        </div>
+
+        <div class="fact">
+          <div class="fact-icon">🚴</div>
+          <div>
+            <h4>When not coding</h4>
+            <p>Cycling, dragonboat, hiking, and consuming too many movies and shows</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" style="background: var(--navy-mid); border-top: 1px solid var(--border);">
+    <div class="section-label">// where I've worked</div>
+    <h2 class="section-title reveal">Experience</h2>
+    <div class="timeline">
+      
+      <div class="timeline-item reveal">
+        <div class="timeline-header">
+          <div class="timeline-role">Data Science Intern</div>
+          <div class="timeline-date">Dec 2024 - Mar 2025</div>
+        </div>
+        <div class="timeline-company">Humanify Technologies · Remote</div>
+        <ul class="timeline-bullets">
+          <li>Built a self-service Python/Dash BI dashboard letting non-technical users filter, visualize, and export market-research data in real time — cut repetitive spreadsheet work by <strong>83%</strong>.</li>
+          <li>Integrated scikit-learn models for automated trendline generation and forecasting, giving stakeholders faster insights without code.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-header">
+          <div class="timeline-role">Research Intern</div>
+          <div class="timeline-date">Jun 2023 - Oct 2023</div>
+        </div>
+        <div class="timeline-company">Stanford University · Stanford, CA</div>
+        <ul class="timeline-bullets">
+          <li>Scraped and cleaned <strong>1,359,000+</strong> FEC donation records (Python, SQL), building a reusable pipeline for ongoing political-science studies.</li>
+          <li>Applied NLP topic modeling (gensim LDA) and sentiment analysis to 7,995 biographical texts on U.S. military leaders, surfacing key themes for a working paper.</li>
+          <li>Visualized findings with Plotly and pyLDAvis, refining statistical narratives for non-technical audiences.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-header">
+          <div class="timeline-role">Consultant</div>
+          <div class="timeline-date">Jan 2025 - Mar 2025</div>
+        </div>
+        <div class="timeline-company">English Composition Placement Analytics · UCLA</div>
+        <ul class="timeline-bullets">
+          <li>Modeled 1,028 IPP student records with ordinal logistic regression in R, revealing self-placement bias and factors driving final course assignments.</li>
+          <li>Delivered heatmaps and mosaic plots that guided program changes supporting first-gen and URM students.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">// things I've built</div>
+    <h2 class="section-title reveal">Projects</h2>
+    <div class="projects-grid">
+      
+      <div class="project-card reveal">
+        <div class="project-tag">NLP · ML · Streamlit</div>
+        <div class="project-title">CineYash: Personal Movie Rating Engine</div>
+        <div class="project-desc">Merged personal viewing logs with OMDb API metadata. Applied GoEmotions to vectorize plot summaries, trained Random Forest regressors, and built a cosine-similarity recommendation system. Live on Streamlit.</div>
+        <a href="https://cineyash.streamlit.app" target="_blank" class="project-link">cineyash.streamlit.app →</a>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-tag">NLP · OpenAI · Python</div>
+        <div class="project-title">Semantic Job Search Engine</div>
+        <div class="project-desc">Multi-turn conversational search engine using OpenAI embeddings + GPT-4o-mini for intent parsing. Stateful query refinement accumulates role, company, and seniority intent across turns with a logarithmic confidence function.</div>
+        
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-tag">NLP · TF-IDF · Embeddings</div>
+        <div class="project-title">Chris Stuckmann Film Criticism — Stylistic Change Analysis</div>
+        <div class="project-desc">Modular pipeline to ingest and clean 1,400+ YouTube transcripts. Compared TF-IDF + KMeans vs. embedding-based methods; analyzed language shifts over time using sentiment features and time-series visualizations.</div>
+        
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-tag">R · Ordinal Regression</div>
+        <div class="project-title">English Composition Placement Analytics</div>
+        <div class="project-desc">Ordinal logistic regression on 1,028 student records to surface self-placement bias. Heatmaps and mosaic plots guided program changes supporting first-gen and URM students at UCLA.</div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills-section" id="skills">
+    <div class="section-label">// toolbox</div>
+    <h2 class="section-title reveal">Skills</h2>
+    <div class="skills-grid">
+      
+      <div class="skill-group reveal">
+        <h3>Languages</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">R</span>
+          <span class="skill-tag">SQL</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal">
+        <h3>ML & NLP</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Scikit-learn</span>
+          <span class="skill-tag">TensorFlow</span>
+          <span class="skill-tag">NumPy</span>
+          <span class="skill-tag">Pandas</span>
+          <span class="skill-tag">gensim</span>
+          <span class="skill-tag">NLTK</span>
+          <span class="skill-tag">quanteda</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal">
+        <h3>Visualization & BI</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Plotly</span>
+          <span class="skill-tag">ggplot2</span>
+          <span class="skill-tag">Tableau</span>
+          <span class="skill-tag">Dash</span>
+          <span class="skill-tag">Streamlit</span>
+          <span class="skill-tag">pyLDAvis</span>
+        </div>
+      </div>
+
+      <div class="skill-group reveal">
+        <h3>Other</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">SPSS</span>
+          <span class="skill-tag">Excel</span>
+          <span class="skill-tag">tidyverse</span>
+          <span class="skill-tag">OpenAI API</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- CYCLING -->
+  <section id="cycling" style="background: var(--navy-mid); border-top: 1px solid var(--border);">
+    <div class="section-label">// beyond the terminal</div>
+    <h2 class="section-title reveal">Cycling</h2>
+    <div class="cycling-grid">
+      <div class="cycling-bio reveal">
+        <p>I'm a little retired from cycling these days, but I wanted to include this anyways since it's been such a big part of my life for so long! Cycling has gotten me through some of the toughest times in my life and the ability to spend alone-time for hours in nature is something I will never take for granted. Every bit of pain and suffering was worth it.<br><br>Cycling is also something that I believe quietly influenced my love for data. The sport has all sorts of tools to measure all sorts of metrics. Power meters, heart-rate monitors, and speedometers are the some you may be familiar with. Obsessing over these numbers made me a better cyclist and that made me realize how amazing data is when it's made accessible to anyone. <br><br>Here are some metrics to show you what I mean. And this is just the tip of the iceberg when it comes to data...</p>
+        <a href="https://www.strava.com/athletes/27552084" target="_blank" class="btn btn-ghost" style="margin-top:1.5rem; display:inline-flex;">View on Strava ↗</a>
+      </div>
+      <div class="cycling-stats">
+        
+        <div class="cycling-stat reveal">
+          <div class="cycling-value">16:34 @ 5.27 W/kg</div>
+          <div class="cycling-name">Mandeville Canyon</div>
+          <div class="cycling-context">~4.9mi, 953ft, 17.75 mph</div>
+        </div>
+
+        <div class="cycling-stat reveal">
+          <div class="cycling-value">11:15 @ 5.43 W/kg</div>
+          <div class="cycling-name">The New Nichols Climb (hollywood to runyon viala cuesta)</div>
+          <div class="cycling-context">~2.39mi, 792ft, 12.75 mph</div>
+        </div>
+
+        <div class="cycling-stat reveal">
+          <div class="cycling-value">3:42 @ 6.33 W/kg</div>
+          <div class="cycling-name">Getty view climb - casiano rd</div>
+          <div class="cycling-context">~0.8mi, 296ft, 12.97 mph</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="section-label" style="text-align:center;">// let's connect</div>
+    <h2 class="section-title reveal">Want to work<br>together?</h2>
+    <p style="color:var(--muted); max-width:480px; margin:0 auto 1.5rem;" class="reveal">
+      Whether it's a data problem, a research project, or just a good conversation — I'm always open to it.
+    </p>
+    <div class="contact-links reveal">
+      <a href="mailto:yashysshahani@ucla.edu" class="btn btn-primary">yashysshahani@ucla.edu</a>
+      <a href="https://linkedin.com/in/yashysshahani" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+      <a href="https://github.com/yashysshahani" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 Yash Shahani</span>
+    <span>San Jose, CA · +1 (224) 518-6707</span>
+  </footer>
+
+</div>
+
+<script>
+  /* Starfield */
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 6000);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        alpha: Math.random() * 0.6 + 0.1,
+        speed: Math.random() * 0.015 + 0.005,
+        phase: Math.random() * Math.PI * 2,
+        hue: Math.random() < 0.3 ? 'rgba(120,180,255,' : 'rgba(200,220,255,'
+      });
+    }
+  }
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const grad = ctx.createRadialGradient(
+      canvas.width * 0.7, canvas.height * 0.8, 0,
+      canvas.width * 0.7, canvas.height * 0.8, canvas.width * 0.9
+    );
+    grad.addColorStop(0, '#0d1e45');
+    grad.addColorStop(0.4, '#0a1428');
+    grad.addColorStop(1, '#060b16');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const glow = ctx.createRadialGradient(
+      canvas.width * 0.85, canvas.height * 0.85, 0,
+      canvas.width * 0.85, canvas.height * 0.85, canvas.width * 0.45
+    );
+    glow.addColorStop(0, 'rgba(30, 80, 180, 0.18)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    frame++;
+    stars.forEach(s => {
+      const twinkle = Math.sin(s.phase + frame * s.speed) * 0.3 + 0.7;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.hue + (s.alpha * twinkle) + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  resize(); initStars(); draw();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+
+  /* Scroll reveal */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
